@@ -3,35 +3,36 @@ import Keys._
 
 object Dependencies {
 
-  val Nightly = sys.env.get("TRAVIS_EVENT_TYPE").contains("cron")
+  val CronBuild = sys.env.get("TRAVIS_EVENT_TYPE").contains("cron")
 
   val Scala211 = "2.11.12"
   val Scala212 = "2.12.10"
   val Scala213 = "2.13.1"
-  val ScalaVersions = Seq(Scala212, Scala211, Scala213).filterNot(_ == Scala211 && Nightly)
+  val ScalaVersions = Seq(Scala212, Scala211, Scala213).filterNot(_ == Scala211 && CronBuild)
 
-  val Akka25Version = "2.5.30"
+  val Akka25Version = "2.5.31"
   val Akka26Version = "2.6.4"
-  val AkkaVersion = if (Nightly) Akka26Version else Akka25Version
-  val AkkaBinaryVersion = if (Nightly) "2.6" else "2.5"
+  val AkkaVersion = if (CronBuild) Akka26Version else Akka25Version
+  val AkkaBinaryVersion = if (CronBuild) "2.6" else "2.5"
 
   val InfluxDBJavaVersion = "2.15"
 
-  val AwsSdkVersion = "1.11.476"
-  val AwsSdk2Version = "2.10.60"
-  val AwsSpiAkkaHttpVersion = "0.0.7"
+  val AwsSdk2Version = "2.11.3"
+  val AwsSpiAkkaHttpVersion = "0.0.8"
   // Sync with plugins.sbt
   val AkkaGrpcBinaryVersion = "0.8"
-  val AkkaHttpVersion = "10.1.11"
-  val AkkaHttpBinaryVersion = "10.1"
+  val AkkaHttp101 = "10.1.11"
+  val AkkaHttp102 = "10.2.0-M1"
+  val AkkaHttpVersion = if (CronBuild) AkkaHttp102 else AkkaHttp101
+  val AkkaHttpBinaryVersion = if (CronBuild) "10.2" else "10.1"
   val mockitoVersion = "3.1.0"
 
-  val CouchbaseVersion = "2.7.2"
+  val CouchbaseVersion = "2.7.13"
   val CouchbaseVersionForDocs = "2.7"
 
   val JwtCoreVersion = "3.0.1"
 
-  val log4jOverSlf4jVersion = "1.7.29"
+  val log4jOverSlf4jVersion = "1.7.30"
   val jclOverSlf4jVersion = "1.7.29"
 
   // Allows to silence scalac compilation warnings selectively by code block or file path
@@ -62,7 +63,7 @@ object Dependencies {
         "org.scalatest" %% "scalatest" % "3.1.0", // ApacheV2
         "com.novocode" % "junit-interface" % "0.11", // BSD-style
         "ch.qos.logback" % "logback-classic" % "1.2.3", // Eclipse Public License 1.0
-        "junit" % "junit" % "4.12" // Eclipse Public License 1.0
+        "junit" % "junit" % "4.13" // Eclipse Public License 1.0
       )
   )
 
@@ -168,7 +169,6 @@ object Dependencies {
     libraryDependencies ++= Seq(
         "org.elasticsearch.client" % "elasticsearch-rest-client" % "6.3.1", // ApacheV2
         "io.spray" %% "spray-json" % "1.3.5", // ApacheV2
-        "org.codelibs" % "elasticsearch-cluster-runner" % "6.3.2.1" % Test, // ApacheV2
         "org.slf4j" % "jcl-over-slf4j" % jclOverSlf4jVersion % Test
       ) ++ JacksonDatabindDependencies
   )
@@ -184,6 +184,8 @@ object Dependencies {
         "org.apache.parquet" % "parquet-avro" % "1.10.0", //Apache2
         "org.apache.hadoop" % "hadoop-client" % "3.2.1" % Test exclude ("log4j", "log4j"), //Apache2
         "org.apache.hadoop" % "hadoop-common" % "3.2.1" % Test exclude ("log4j", "log4j"), //Apache2
+        "com.sksamuel.avro4s" %% "avro4s-core" % "3.0.0" % Test,
+        "org.scalacheck" %% "scalacheck" % "1.14.1" % Test,
         "org.specs2" %% "specs2-core" % "4.8.0" % Test, //MIT like: https://github.com/etorreborre/specs2/blob/master/LICENSE.txt
         "org.slf4j" % "log4j-over-slf4j" % log4jOverSlf4jVersion % Test // MIT like: http://www.slf4j.org/license.html
       )
@@ -196,8 +198,8 @@ object Dependencies {
       )
   )
 
-  val GeodeVersion = "1.11.0"
-  val GeodeVersionForDocs = "111"
+  val GeodeVersion = "1.12.0"
+  val GeodeVersionForDocs = "112"
 
   val Geode = Seq(
     libraryDependencies ++=
@@ -222,7 +224,7 @@ object Dependencies {
     // see Akka gRPC version in plugins.sbt
     libraryDependencies ++= Seq(
         // https://github.com/googleapis/java-pubsub/tree/master/proto-google-cloud-pubsub-v1/
-        "com.google.api.grpc" % "grpc-google-cloud-pubsub-v1" % "1.85.1" % "protobuf", // ApacheV2
+        "com.google.api.grpc" % "grpc-google-cloud-pubsub-v1" % "1.85.1" % "protobuf-src", // ApacheV2
         "io.grpc" % "grpc-auth" % "1.28.0", // ApacheV2
         "com.google.auth" % "google-auth-library-oauth2-http" % "0.20.0", // BSD 3-clause
         // pull in Akka Discovery for our Akka version
@@ -263,13 +265,13 @@ object Dependencies {
     )
   }
 
-  val HadoopVersion = "3.1.1"
+  val HadoopVersion = "3.2.1"
   val Hdfs = Seq(
     libraryDependencies ++= Seq(
         "org.apache.hadoop" % "hadoop-client" % HadoopVersion exclude ("log4j", "log4j") exclude ("org.slf4j", "slf4j-log4j12"), // ApacheV2
         "org.typelevel" %% "cats-core" % "2.0.0", // MIT,
-        "org.apache.hadoop" % "hadoop-hdfs" % HadoopVersion % Test classifier "tests" exclude ("log4j", "log4j") exclude ("org.slf4j", "slf4j-log4j12"), // ApacheV2
-        "org.apache.hadoop" % "hadoop-common" % HadoopVersion % Test classifier "tests" exclude ("log4j", "log4j") exclude ("org.slf4j", "slf4j-log4j12"), // ApacheV2
+        "org.apache.hadoop" % "hadoop-hdfs" % HadoopVersion % Test exclude ("log4j", "log4j") exclude ("org.slf4j", "slf4j-log4j12"), // ApacheV2
+        "org.apache.hadoop" % "hadoop-common" % HadoopVersion % Test exclude ("log4j", "log4j") exclude ("org.slf4j", "slf4j-log4j12"), // ApacheV2
         "org.apache.hadoop" % "hadoop-minicluster" % HadoopVersion % Test exclude ("log4j", "log4j") exclude ("org.slf4j", "slf4j-log4j12"), // ApacheV2
         "org.slf4j" % "log4j-over-slf4j" % log4jOverSlf4jVersion % Test // MIT like: http://www.slf4j.org/license.html
       )
@@ -302,8 +304,8 @@ object Dependencies {
 
   val JsonStreaming = Seq(
     libraryDependencies ++= Seq(
-        "com.github.jsurfer" % "jsurfer" % "1.4.3", // MIT,
-        "com.github.jsurfer" % "jsurfer-jackson" % "1.4.3" // MIT
+        "com.github.jsurfer" % "jsurfer" % "1.6.0", // MIT,
+        "com.github.jsurfer" % "jsurfer-jackson" % "1.6.0" // MIT
       ) ++ JacksonDatabindDependencies
   )
 
@@ -343,7 +345,7 @@ object Dependencies {
 
   val Mqtt = Seq(
     libraryDependencies ++= Seq(
-        "org.eclipse.paho" % "org.eclipse.paho.client.mqttv3" % "1.2.0" // Eclipse Public License 1.0
+        "org.eclipse.paho" % "org.eclipse.paho.client.mqttv3" % "1.2.2" // Eclipse Public License 1.0
       )
   )
 
@@ -362,6 +364,18 @@ object Dependencies {
         "com.orientechnologies" % "orientdb-object" % "3.0.13" // ApacheV2
       )
   )
+
+  val PravegaVersion = "0.7.0"
+  val PravegaVersionForDocs = s"v${PravegaVersion}"
+
+  val Pravega = {
+    Seq(
+      libraryDependencies ++= Seq(
+          "io.pravega" % "pravega-client" % PravegaVersion,
+          "org.slf4j" % "log4j-over-slf4j" % log4jOverSlf4jVersion % Test // MIT like: http://www.slf4j.org/license.html
+        )
+    )
+  }
 
   val Reference = Seq(
     // connector specific library dependencies and resolver settings
@@ -459,8 +473,8 @@ object Dependencies {
 
   val UnixDomainSocket = Seq(
     libraryDependencies ++= Seq(
-        "com.github.jnr" % "jffi" % "1.2.22", // classifier "complete", // Is the classifier needed anymore?
-        "com.github.jnr" % "jnr-unixsocket" % "0.25" // BSD/ApacheV2/CPL/MIT as per https://github.com/akka/alpakka/issues/620#issuecomment-348727265
+        "com.github.jnr" % "jffi" % "1.2.23", // classifier "complete", // Is the classifier needed anymore?
+        "com.github.jnr" % "jnr-unixsocket" % "0.28" // BSD/ApacheV2/CPL/MIT as per https://github.com/akka/alpakka/issues/620#issuecomment-348727265
       )
   )
 
