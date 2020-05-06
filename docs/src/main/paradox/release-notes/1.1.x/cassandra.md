@@ -1,5 +1,9 @@
 # Cassandra
 
+## 1.1.2-guava-27.1-compatible
+
+- Provide explicit executor when calling Futures.addCallback
+
 ## 1.1.2
 
 No changes.

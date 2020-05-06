@@ -1,5 +1,9 @@
 # Apache HDFS
 
+## 1.1.2-guava-27.1-compatible
+
+No changes.
+
 ## 1.1.2
 
 No changes.

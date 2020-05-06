@@ -1,5 +1,9 @@
 # Couchbase
 
+## 1.1.2-guava-27.1-compatible
+
+No changes.
+
 ## 1.1.2
 
 - Add bucket replace functionality [#1888](https://github.com/akka/alpakka/issues/1888) by [@maxrem](https://github.com/maxrem) backported in [#1975](https://github.com/akka/alpakka/pull/1975)

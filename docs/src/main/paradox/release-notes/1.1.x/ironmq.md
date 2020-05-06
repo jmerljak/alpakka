@@ -1,5 +1,9 @@
 # IronMQ
 
+## 1.1.2-guava-27.1-compatible
+
+No changes.
+
 ## 1.1.2
 
 - Akka HTTP 10.1.10 [#1939](https://github.com/akka/alpakka/issues/1939) by [@ennru](https://github.com/ennru) backported in [#1969](https://github.com/akka/alpakka/pull/1969)

@@ -1,5 +1,9 @@
 # JMS
 
+## 1.1.2-guava-27.1-compatible
+
+No changes.
+
 ## 1.1.2
 
 - Added withHeader(s) withProperty(-ies) and withoutDestination methods… [#1830](https://github.com/akka/alpakka/issues/1830) by [@WellingR](https://github.com/WellingR) backported in [#1974](https://github.com/akka/alpakka/pull/1974) 

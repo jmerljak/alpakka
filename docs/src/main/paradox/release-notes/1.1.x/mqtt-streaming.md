@@ -1,5 +1,9 @@
 # MQTT Streaming
 
+## 1.1.2-guava-27.1-compatible
+
+No changes.
+
 ## 1.1.2
 
 - Automatically unregister packet ids and other resources [#1853](https://github.com/akka/alpakka/issues/1853) by [@huntc](https://github.com/huntc) backported in [#1961](https://github.com/akka/alpakka/pull/1961)
